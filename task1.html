@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sentiment Analysis</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Caveat:wght@400;700&family=Lobster&family=Monoton&family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display+SC:ital,wght@0,400;0,700;1,700&family=Playfair+Display:ital,wght@0,400;0,700;1,700&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&family=Source+Sans+Pro:ital,wght@0,400;0,700;1,700&family=Work+Sans:ital,wght@0,400;0,700;1,700&display=swap');
+
+body {
+    margin: 0px;
+}
+
+.bg-container {
+    background-color: #262625;
+    box-sizing: border-box;
+    padding: 25px;
+}
+
+.try-button {
+    background-color: white;
+    border-radius: 30px;
+    width: 150px;
+    height: 50px;
+}
+
+.first-page-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.first-page-heading {
+    color: lightgray;
+    max-width: 540px;
+    text-align: center;
+    font-size: 32px;
+}
+
+.main-heading {
+    color: white;
+    font-size: 50px;
+    text-align: center;
+    font-family: monospace;
+}
+
+.main-heading,
+.first-page-heading,
+.robot-first,
+.sentiment-texts {
+    transform: translateY(20px);
+    overflow: hidden;
+    animation: fadeInUp 1.5s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+.each:hover {
+    background-color: lightgray;
+    color: white;
+    font-weight: bold;
+    border-radius: 40px;
+    text-align: center;
+}
+
+.navbar.scrolled {
+    background-color: darkgray !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: white;
+}
+
+.sentiment-texts {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    font-size: 32px;
+    font-weight: 700;
+    color: lightgray;
+}
+
+.positive {
+    animation: colorPositive 6s infinite;
+}
+
+.neutral {
+    animation: colorNeutral 6s infinite;
+}
+
+.negative {
+    animation: colorNegative 6s infinite;
+}
+
+@keyframes colorPositive {
+
+    0%,
+    100% {
+        color: lightgray;
+    }
+
+    20%,
+    40% {
+        color: lightgreen;
+    }
+
+    60%,
+    80% {
+        color: lightgray;
+    }
+}
+
+@keyframes colorNeutral {
+
+    0%,
+    100% {
+        color: lightgray;
+    }
+
+    20%,
+    40% {
+        color: #fff;
+    }
+
+    /* neutral highlight */
+    60%,
+    80% {
+        color: lightgray;
+    }
+}
+
+@keyframes colorNegative {
+
+    0%,
+    100% {
+        color: lightgray;
+    }
+
+    20%,
+    40% {
+        color: orangered;
+    }
+
+    60%,
+    80% {
+        color: lightgray;
+    }
+}
+
+.sentiment-text {
+    transition: color 0.5s ease;
+}
+
+.neutral {
+    animation-delay: 2s;
+}
+
+.negative {
+    animation-delay: 4s;
+}
+
+.robot-image-scrolled {
+    display: none;
+}
+
+.second-page-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+}
+
+.second-page-heading {
+    max-width: 540px;
+    text-align: center;
+    font-size: 25px;
+    font-family: "Serif";
+    color: whitesmoke;
+}
+
+.type {
+    color: white;
+    font-family: "Sans-Serif";
+    font-size: 30px;
+    text-align: center;
+}
+
+.robot-second {
+    width: 350px;
+    height: 410px;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 6s ease, transform 6s ease;
+}
+
+.robot-second:hover {
+    width: 400px;
+    height: 440px;
+}
+
+.robot-second.active {
+    opacity: 1;
+    transform: translateY(0);
+    animation: bounce 1s ease;
+}
+
+@keyframes bounce {
+    0% {
+        transform: translateY(0);
+    }
+
+    30% {
+        transform: translateY(-20px);
+    }
+
+    50% {
+        transform: translateY(0);
+    }
+
+    70% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.card {
+    width: 35vh;
+    margin-top: 50px;
+    background: transparent;
+    color: whitesmoke;
+    border: 2px dotted gray;
+}
+
+.card:hover {
+    text-shadow: 2px 2px whitesmoke;
+}
+
+.contact-line {
+    color: white;
+    text-align: center;
+}
+
+.form-button {
+    background-color: transparent;
+    border: 1px solid lightgray;
+    color: whitesmoke;
+    border-radius: 10px;
+    width: 60px;
+    text-decoration: underline;
+}
+
+.fourth-container:hover,
+.third-page-container:hover,
+.second-page-container:hover {
+    border: 2px solid gray;
+}
+
+form {
+    background-color: black;
+    height: 100vh;
+    color: lightgray;
+    padding: 20px;
+}
+
+.form-head {
+    color: white;
+    font-size: 25px;
+    text-align: center;
+}
+
+.back-button {
+    background-color: transparent;
+    border: 1px solid white;
+    color: white;
+}
+
+.submit-button {
+    background-color: lightgray;
+    color: black;
+    border: 1px solid black;
+    border-radius: 10px;
+    font-size: 10px;
+    width: 100px;
+    height: 30px;
+}
+
+
+.ai-body {
+    background: #12121f;
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ai-container {
+    background: #1e1e2f;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+    text-align: center;
+}
+
+h2 {
+    color: #00e676;
+    margin-bottom: 1rem;
+}
+
+textarea {
+    width: 100%;
+    height: 100px;
+    border-radius: 8px;
+    border: none;
+    padding: 1rem;
+    font-size: 1.1rem;
+    background: #2c2c3d;
+    color: white;
+    resize: none;
+    outline: none;
+    margin-bottom: 1rem;
+}
+
+.analyse-button {
+    background: #00c853;
+    border: none;
+    color: white;
+    padding: 0.8rem 2rem;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+.analyse-button:hover {
+    background: #00b14f;
+}
+
+.result {
+    font-size: 1.3rem;
+    font-weight: 700;
+    user-select: none;
+    min-height: 1.5em;
+    color: #ccc;
+}
+
+.positive-ai {
+    color: #00e676;
+}
+
+.negative-ai {
+    color: #ff3d00;
+}
+
+.neutral-ai {
+    color: #999;
+}
+
+@media screen and (min-width: 601px) and (max-width:770px) {
+    .first-page-container {
+        flex-direction: column;
+    }
+
+    .second-page-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .robot-second {
+        order: -1;
+    }
+
+    .main-heading {
+        font-size: 45px;
+    }
+
+    .first-page-heading {
+        font-size: 28px;
+        font-family: "Serif";
+    }
+
+    .robot-first,
+    .robot-second {
+        width: 300px;
+        height: 350px;
+        margin-top: 100px;
+    }
+
+    .card {
+        font-size: 28px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .first-page-container {
+        flex-direction: column;
+    }
+
+    .second-page-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .robot-second {
+        order: -1;
+    }
+
+    .robot-first,
+    .robot-second {
+        width: 250px;
+        height: 300px;
+        margin-top: 120px;
+    }
+
+    .main-heading {
+        font-size: 25px;
+    }
+
+    .first-page-heading {
+        font-size: 20px;
+    }
+
+    .sentiment-text {
+        font-size: 15px;
+    }
+
+    .card {
+        font-size: 22px;
+        min-width: 50vh;
+    }
+}
+
+@media screen and (min-width: 771px) {
+    .each {
+        font-size: 25px;
+        border: 2px solid lightgray;
+        border-radius: 40px;
+        background-color: transparent;
+        padding-left: 5px;
+        padding-right: 5px;
+        margin: 10px;
+    }
+
+    .robot-first,
+    .robot-second {
+        width: 300px;
+        height: 380px;
+    }
+
+    .robot-first {
+        margin-top: 100px;
+    }
+
+    .first-page-container {
+        height: 100vh;
+    }
+
+    .second-page-container {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .card {
+        font-size: 32px;
+        width: 300px;
+    }
+}
+    </style>
+</head>
+
+<body>
+    <div class="bg-container" id="sectionHome">
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+            <button class="try-button" onclick="display('sectionDemo')">Try Demo</button>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link each" href="#home">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link each" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link each" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link each" href="#contactUs">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="first-page-container" id="home">
+            <img src="https://res.cloudinary.com/deeromtcz/image/upload/v1748860205/robot-with-reporter-microphone_tce66q.png" class="robot-first" />
+            <div>
+                <h1 class="main-heading">Sentiment Analyser</h1>
+                <h1 class="first-page-heading">The Ultimate AI To Find The Sentiment Behind Your Text</h1>
+                <div class="sentiment-texts">
+                    <div class="sentiment-text positive">Positive</div>
+                    <div class="sentiment-text neutral">Neutral</div>
+                    <div class="sentiment-text negative">Negative</div>
+                </div>
+            </div>
+        </div>
+        <div class="second-page-container" id="about">
+            <div>
+                <h1 class="type">---About---</h1>
+                <h1 class="second-page-heading">Launching a new Website, Sentiment Analysis, It is a technique used in Natural Language Processing (NLP) to determine the emotional tone or attitude behind a piece of text.</h1>
+                <h1 class="first-page-heading">For example, given:
+                    <br />
+                    “I love this product!” – Sentiment: positive <br />
+                    “This is the worst experience ever.” – Sentiment: negative
+                </h1>
+            </div>
+            <img src="https://res.cloudinary.com/deeromtcz/image/upload/v1748860318/robot-doing-peace-sign_whg4cj.png" class="robot-second" />
+        </div>
+        <div class="third-page-container" id="features">
+            <br /><br /><br />
+            <h1 class="type">---Features---</h1>
+            <div class="cards-container">
+                <div class="card">
+                    <div class="card-body">
+                        Users can enter any text (like reviews, comments, etc.) into a text box.
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        A button that, when clicked, will process the input text and show the sentiment.
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        The system will label the input text as Positive, Negative, or Neutral.
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        For real-world usage, you might connect to a real NLP sentiment analysis API or backend.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fourth-container" id="contactUs">
+            <br /><br /><br />
+            <h1 class="type">---Let's Get In Touch---</h1>
+            <p class="contact-line">"Have questions or suggestions? We’d love to hear from you."<br />Contact Us through this <button class="form-button" onclick="display('sectionForm')">Form</button>
+                <br />
+                Or<br />
+                Email Address: sentimentAI@gmail.com<br />
+                Phone Number: 9087654321<br />
+            </p>
+        </div>
+    </div>
+
+    <div id="sectionForm">
+        <form>
+            <h1 class="form-head">Fill Out This Form To Reach Us</h1>
+            <div class="mb-4 mt-4">
+                <label for="exampleFormControlInput1" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlTextarea1" class="form-label">Suggestions</label>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+            </div>
+            <div style="text-align: center"><button class="submit-button">Submit</button></div>
+            <button class="back-button" onclick="display('sectionHome')">Back</button>
+        </form>
+    </div>
+    <div id="sectionDemo">
+        <div class="ai-body">
+            <div class="ai-container" aria-label="Sentiment Analyzer Demo">
+                <h2>AI-Powered Sentiment Analyzer</h2>
+                <textarea id="textInput" placeholder="Type your text here..."></textarea>
+                <button id="analyzeBtn" class="analyse-button">Analyze Sentiment</button>
+                <div id="result" class="result"></div>
+                <button class="back-button" onclick="display('sectionHome')">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('scroll', function() {
+    const navbar = document.querySelector('.navbar');
+    const robot = document.querySelector('.robot-first');
+    const robot2 = document.querySelector('.robot-second');
+    if (window.scrollY > 100) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
+    }
+});
+const imageContainer = document.querySelector('.robot-second');
+
+window.addEventListener('scroll', () => {
+    const rect = imageContainer.getBoundingClientRect();
+    imageContainer.classList.add('active');
+});
+
+
+const analyzeBtn = document.getElementById('analyzeBtn');
+const textInput = document.getElementById('textInput');
+const resultDiv = document.getElementById('result');
+
+// Simple keyword-based sentiment lists
+const positiveWords = ['love', 'happy', 'great', 'good', 'awesome', 'excellent', 'nice', 'fantastic', 'like', 'amazing', 'best'];
+const negativeWords = ['hate', 'bad', 'terrible', 'awful', 'worst', 'sad', 'angry', 'dislike', 'poor', 'disappointing', "donot"];
+
+function analyzeSentiment(text) {
+    const words = text.toLowerCase().split(/\W+/);
+
+    let score = 0;
+    words.forEach(word => {
+        if (positiveWords.includes(word)) score++;
+        if (negativeWords.includes(word)) score--;
+    });
+
+    if (score > 0) return 'positive';
+    else if (score < 0) return 'negative';
+    else return 'neutral';
+}
+
+analyzeBtn.addEventListener('click', () => {
+    const text = textInput.value.trim();
+    if (!text) {
+        resultDiv.textContent = 'Please enter some text.';
+        resultDiv.className = 'result neutral';
+        return;
+    }
+    const sentiment = analyzeSentiment(text);
+    if (sentiment === 'positive') {
+        resultDiv.textContent = '😊 Positive';
+        resultDiv.className = 'result positive';
+    } else if (sentiment === 'negative') {
+        resultDiv.textContent = '😞 Negative';
+        resultDiv.className = 'result negative';
+    } else {
+        resultDiv.textContent = '😐 Neutral';
+        resultDiv.className = 'result neutral';
+    }
+});
+    </script>
+    <script type="text/javascript" src="https://d1tgh8fmlzexmh.cloudfront.net/ccbp-static-website/js/ccbp-ui-kit.js"></script>
+</body>
+
+</html>
