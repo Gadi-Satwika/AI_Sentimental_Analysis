@@ -18,6 +18,7 @@ This project is a fully responsive landing webpage designed for an AI-based Sent
 - Responsive Design Techniques
 
 ## 📸 Preview
+  https://gadi-satwika.github.io/SCT_WD_1/
 
   📬 Contact
 For any queries, contact me at satwikagadi2005@gmail.com
