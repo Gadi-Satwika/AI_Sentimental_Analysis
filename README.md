@@ -1,4 +1,26 @@
 # SCT_WD_1
-As part of my internship at Skill Craft Technology, i have completed task 1 that is to create a responsive web page.
+
+# AI Sentimental Analysis – Responsive Landing Page
+
+This project is a fully responsive landing webpage designed for an AI-based Sentimental Analysis platform. It showcases a clean UI/UX design, structured layout, and mobile responsiveness.
+
+## 🌟 Features
+
+- Responsive layout using HTML and CSS
+- Sections: Header, About, Features, Contact
+- Attractive call-to-action buttons
+- Mobile-friendly design
+
+## 🛠️ Technologies Used
+
+- HTML5
+- CSS3
+- Responsive Design Techniques
+
+## 📸 Preview
+
+  📬 Contact
+For any queries, contact me at satwikagadi2005@gmail.com
+
 The project is to create a responsive web page, with interaction navigation menu that changes when scrolled or when hovering over a menu item.
 The navigation menu should be fixed and visible on all pages and these are the requirements in my project.
