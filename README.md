@@ -18,7 +18,8 @@ I had done this project as part of my internship at skill craft technology.
 - Responsive Design Techniques
 
 ## 📸 Preview
-  https://gadi-satwika.github.io/SCT_WD_1/
+  [Click Here For Preview: ](https://gadi-satwika.github.io/AI_Sentimental_Analysis/
+)
 
   📬 Contact
 For any queries, contact me at satwikagadi2005@gmail.com
