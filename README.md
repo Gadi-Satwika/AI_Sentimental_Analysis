@@ -1,8 +1,8 @@
-# SCT_WD_1
-
 # AI Sentimental Analysis – Responsive Landing Page
 
 This project is a fully responsive landing webpage designed for an AI-based Sentimental Analysis platform. It showcases a clean UI/UX design, structured layout, and mobile responsiveness.
+
+I had done this project as part of my internship at skill craft technology.
 
 ## 🌟 Features
 
